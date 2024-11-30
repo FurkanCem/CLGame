@@ -14,24 +14,24 @@ struct Player_s{
 	int invCapacity;
 	int itemCtr;
 	Item* items;
-}Player_default = {100.0,10.0,0,5,0,NULL};
+	int hp;
+}Player_default = {100.0,10.0,0,5,0,NULL,3};
 
 typedef struct Player_s Player;
 
-void getPlayerItemName(Player* p,int index){
-	int i = 0;
-	while(p->items[index].name[i] != '\0'){
-		printf("%c",p->items[index].name[i++]);	
-	}
-	printf(" : %d",p->items[index].quantity);
-	printf("\n");
+void givePlayerInfo(Player* p){
+	printf("Health : %.0lf Str : %.0lf Def : %.0lf HealthPotion : %d\n",p->health,p->strength,p->defence,p->hp);
 }
 
 void displayInventory(Player* p){
-	int i = 0;
-	for(i = 0;i<p->itemCtr;i++){
-		getPlayerItemName(p,i);
-	};
+	printf("Inventory capacity : %d\n",p->invCapacity);
+	if(p->itemCtr == 0){
+		printf("You dont have any items!\n");
+	}
+	for(int i = 0;i<p->itemCtr;i++){
+		printf("%s ",p->items[i].name);
+		printf("Str : %d ,Def : %d ,InvCapacity : %d\n",p->items[i].strStat,p->items[i].defStat,p->items[i].invCapStat);
+	}
 }
 
 void updateStats(Player* p,Item itemToAdd){
@@ -43,6 +43,11 @@ void deleteStats(Player* p,Item itemToAdd){
 	p->strength -= MAX(0,itemToAdd.strStat);
 	p->defence  -= MAX(0,itemToAdd.defStat);
 	p->invCapacity -= MAX(0,itemToAdd.invCapStat);
+}
+
+
+void addHealthPotion(Player* p,int quantity){
+	p->hp = MIN(p->hp+quantity,10);
 }
 
 void addItem(Player* p,Item itemToAdd){
@@ -98,8 +103,12 @@ double attack(Player* p){
 }
 
 double getDamage(Player* p,double val){
-	p->health -= val*(p->defence < 100 ? (100-(p->defence)/100) : 0);
+	p->health -= val; 
 	return p->health;
+}
+void getHeal(Player*p,double val){
+	p->health += val;
+	printf("You healed %.0lf hp!\n",val);
 }
 
 
