@@ -10,7 +10,7 @@
 struct Player_s{
 	double health;
 	double strength;
-	double defense;
+	double defence;
 	int invCapacity;
 	int itemCtr;
 	Item* items;
@@ -18,7 +18,7 @@ struct Player_s{
 
 typedef struct Player_s Player;
 
-void getItemName(Player* p,int index){
+void getPlayerItemName(Player* p,int index){
 	int i = 0;
 	while(p->items[index].name[i] != '\0'){
 		printf("%c",p->items[index].name[i++]);	
@@ -30,18 +30,18 @@ void getItemName(Player* p,int index){
 void displayInventory(Player* p){
 	int i = 0;
 	for(i = 0;i<p->itemCtr;i++){
-		getItemName(p,i);
+		getPlayerItemName(p,i);
 	};
 }
 
 void updateStats(Player* p,Item itemToAdd){
 	p->strength += MIN(10000,itemToAdd.strStat);
-	p->defense  += MIN(10000,itemToAdd.defStat);
+	p->defence  += MIN(10000,itemToAdd.defStat);
 	p->invCapacity += MIN(10000,itemToAdd.invCapStat);
 }
 void deleteStats(Player* p,Item itemToAdd){
 	p->strength -= MAX(0,itemToAdd.strStat);
-	p->defense  -= MAX(0,itemToAdd.defStat);
+	p->defence  -= MAX(0,itemToAdd.defStat);
 	p->invCapacity -= MAX(0,itemToAdd.invCapStat);
 }
 
@@ -95,6 +95,11 @@ void removeItem(Player* p,int index,int quantity){
 
 double attack(Player* p){
 	return (p->strength)*((rand()%11)==3 ? 2 :1);
+}
+
+double getDamage(Player* p,double val){
+	p->health -= val*(p->defence < 100 ? (100-(p->defence)/100) : 0);
+	return p->health;
 }
 
 
