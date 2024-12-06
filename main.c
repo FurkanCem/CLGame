@@ -9,7 +9,11 @@
 Player p1;
 unsigned int roomNumber;
 void gameLoop();
-bool saveExist = false;
+void mainMenu();
+const char* files[] = {"SaveGame1","SaveGame2","SaveGame3"};
+int saves[] = {0,0,0};
+
+
 void startGame(){
 	p1 = Player_default;
 	srand(time(NULL));
@@ -17,18 +21,34 @@ void startGame(){
 	gameLoop();
 }
 
-void checkSaveFiles(){
-	char name[] = "SaveGame1";
-	if(access(name, F_OK) == 0)
-		saveExist = true;
+bool checkSaveFiles(){
+	int fileCtr = sizeof(files)/sizeof(files[0]);
+	bool saveExist = false;
+	for(int i  = 0; i<fileCtr;i++){
+		if(access(files[i],F_OK) == 0){
+			printf("[%d]%s\n",i+1,files[i]);
+			saveExist = true;
+			saves[i] = 1;
+		}
+		else{
+			printf("[%d]Empty save!\n",i+1);
+		}
+	}
+	return saveExist;
 }
-
 
 void saveGame(){
 	FILE *fp;
-	fp = fopen("SaveGame","wb");
-	
-    	fwrite(&p1.health, sizeof(p1.health), 1, fp);
+	checkSaveFiles();	
+	int selection;
+	scanf("%d",&selection);
+	while(selection>3 || selection<1){
+		printf("Enter a valid save location!\n");
+		scanf("%d",&selection);
+	}
+	fp = fopen(files[selection-1],"w");
+
+	fwrite(&p1.health, sizeof(p1.health), 1, fp);
     	fwrite(&p1.strength, sizeof(p1.strength), 1, fp);
     	fwrite(&p1.defence, sizeof(p1.defence), 1, fp);
     	fwrite(&p1.invCapacity, sizeof(p1.invCapacity), 1, fp);
@@ -44,8 +64,21 @@ void saveGame(){
 
 
 void loadGame(){
+	if(!checkSaveFiles()){
+		printf("No save file is found!\n");
+		sleep(2);
+		return;
+	}	
+	
 	FILE *fp;
-	fp = fopen("SaveGame","rb");
+	int selection;
+	scanf("%d",&selection);
+	
+	while(!(selection < 4 && selection > 0 && saves[selection-1] == 1)){
+		printf("Enter a valid save location!\n");
+		scanf("%d",&selection);
+	}
+	fp = fopen(files[selection-1],"r");
 	srand(time(NULL));
 
    	fread(&p1.health, sizeof(p1.health), 1, fp);
