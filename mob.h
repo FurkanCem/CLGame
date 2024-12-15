@@ -1,11 +1,14 @@
 #pragma once
 #include <stdlib.h>
+#include <string.h>
+#include "item.h"
 
 struct Mob_s{
 	double health;
 	double str;
 	double defence;
-}Mob_default = {10,10,0};
+	char* name;
+}Mob_default = {5,5,0};
 
 typedef struct Mob_s Mob;
 
@@ -16,7 +19,16 @@ double mobGetDamage(Mob* mob,double val){
 	mob->health -= val*(mob->defence < 100 ? (100-mob->defence)/100 : 1/100);
 	return mob->health;
 }
+Mob* bossGenerator(int diffuculty){
+	Mob* boss = malloc(sizeof(Mob));
+	boss[0] = Mob_default;
+	boss[0].health = (diffuculty*(rand()%2+2));
+	boss[0].str = (diffuculty*(rand()%2+1));
+	boss[0].defence = (diffuculty*(rand()%2+1));
+	boss[0].name = generateRandomName();
+	return boss;
 
+}
 Mob* mobGenerator(int number,int diffuculty){
 	Mob* mobs = malloc(number*sizeof(Mob));
 	int i = 0;

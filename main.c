@@ -67,6 +67,7 @@ void loadGame(){
 	if(!checkSaveFiles()){
 		printf("No save file is found!\n");
 		sleep(2);
+		mainMenu();
 		return;
 	}	
 	
@@ -99,7 +100,35 @@ void loadGame(){
 }
 
 void deleteGame(){
-
+	if(!checkSaveFiles()){
+		printf("No save file is found!\n");
+		sleep(2);
+		mainMenu();
+		return;
+	}	
+	
+	int selection;
+	scanf("%d",&selection);
+	
+	while(!(selection < 4 && selection > 0 && saves[selection-1] == 1)){
+		printf("Enter a valid save location!\n");
+		scanf("%d",&selection);
+	}
+	printf("Are you sure[y,N] : ");	
+	char surety = 'n';
+	scanf(" %c",&surety);
+	if(!(surety == 'Y' || surety == 'y')){
+		mainMenu();	
+		return;
+	}
+	if(remove(files[selection-1]) == 0){
+		printf("Save game %s file deleted!\n",files[selection-1]);	
+	}
+	else{
+		printf("Error deleting file\n");
+	}
+	sleep(2);
+	mainMenu();
 }
 
 void exitGame(){
@@ -129,7 +158,7 @@ void mainMenu(){
 				loadGame();
 				break;
 			case 3:
-
+				deleteGame();
 				break;
 			case 4:
 				exitGame();
@@ -149,7 +178,7 @@ void actionSelection(){
 
 void gameLoop(){
 	int actionSelected = 0;
-	Room room = roomGenerator(roomNumber);
+	Room room = roomGenerator(roomNumber,0 == roomNumber % 5);
 	int mobTargetIndex = 0;
 	bool toTheNewRoom = false;
 	while(!toTheNewRoom){
@@ -219,9 +248,15 @@ void gameLoop(){
 		}
 		sleep(3);
 	}
-	addItem(&p1,room.reward);
-	printf("You won %s and 2 heath potion!\n",room.reward.name);
-	getHeal(&p1,20.0);
+	if(roomNumber %5 == 0){
+		printf("You won %s and 2 heath potion!\n",room.reward.name); 
+		addItem(&p1,room.reward);
+		getHeal(&p1,50.0);
+	}
+	else{
+		printf("You won 2 heath potion!\n");
+		getHeal(&p1,20.0);
+	}
 	addHealthPotion(&p1,2);
 	sleep(2);
 	roomNumber++;

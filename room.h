@@ -6,16 +6,18 @@ struct Room_s{
 	Mob* mobs;	
 	Item reward;
 	int roomType;
+	bool isBossRoom;
 }Room_default = {1,0,0,0};
 
 typedef struct Room_s Room;
 
-Room roomGenerator(int diffuculty){
+Room roomGenerator(int diffuculty,bool isBossRoom){
 	Room room = Room_default;
-	room.mobCtr += (diffuculty%5);
-	room.mobs = mobGenerator(room.mobCtr,diffuculty);
-	room.reward = itemGenerator(diffuculty);
-	room.roomType = rand() % 3;
+	room.mobCtr += isBossRoom ? 1 : (diffuculty%5);
+	room.mobs = isBossRoom ? bossGenerator(diffuculty) :  mobGenerator(room.mobCtr,diffuculty);
+	room.reward = isBossRoom ? itemGenerator(diffuculty) : Item_default;
+	room.roomType = isBossRoom ? 3 : rand() % 3;
+	room.isBossRoom = isBossRoom;
 	return room;
 }
 
@@ -31,13 +33,22 @@ void giveRoomInformation(Room r){
 		case 2:
 			roomDesc = "Room desc 3";
 			break;
-	}	
-	printf("%s\n",roomDesc);
-	printf("There are %d monsters here\n",r.mobCtr);
-	int i = 0;
-	for(i;i<r.mobCtr;i++){
-		giveMobInfo(r.mobs[i],i+1);
+		case 3:
+			roomDesc = "Boss Room";
+
 	}
-	printf("Reward of this room is : ");
-	displayItem(r.reward);
+	printf("%s\n",roomDesc);
+	if(!r.isBossRoom){
+		printf("There are %d monsters here\n",r.mobCtr);
+		int i = 0;
+		for(i;i<r.mobCtr;i++){
+			giveMobInfo(r.mobs[i],i+1);
+		}	
+	}
+	else{
+		printf("Here lies legendary creature %s!",r.mobs[0].name);
+		printf("Reward of %s is : \n",r.mobs[0].name);
+		displayItem(r.reward);
+	}
+
 }
