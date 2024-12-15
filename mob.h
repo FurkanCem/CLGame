@@ -42,7 +42,10 @@ Mob* mobGenerator(int number,int diffuculty){
 }
 
 void giveMobInfo(Mob m,int num){
-	printf("Mob %d Health : %.0lf Str : %.0lf Def : %.0lf  ",num,m.health,m.str,m.defence);
+	if(num!=-1){
+		printf("Mob %d ",num);
+	}
+	printf("Health : %.0lf Str : %.0lf Def : %.0lf  ",m.health,m.str,m.defence);
 	if(m.health <= 0)
 		printf("Dead");
 	printf("\n");

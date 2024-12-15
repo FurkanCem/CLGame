@@ -103,7 +103,7 @@ double attack(Player* p){
 }
 
 double getDamage(Player* p,double val){
-	p->health -= val; 
+	p->health -= val/(p->defence == 0 ? 1 : p->defence); 
 	return p->health;
 }
 void getHeal(Player*p,double val){
