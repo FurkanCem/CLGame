@@ -134,13 +134,11 @@ void deleteGame(){
 void exitGame(){
 	printf("Goodbye!\n");
 	sleep(3); //For linux
-	// Sleep(3000); //For windows
 	exit(0);
 }
 
 void mainMenu(){
 
-	// system("cls"); //For Windows
 	system("clear"); //For linux
 	printf("\tWelcome to the Game!\n");
 	printf("[1] New Game\n");
@@ -185,7 +183,6 @@ void gameLoop(){
 		bool validChoice = false;
 		bool checkedInventory = false;
 		while(true){
-			// system("cls"); //For Windows
 			system("clear"); //For linux
 			printf("Room : %d\n",roomNumber);
 			givePlayerInfo(&p1);

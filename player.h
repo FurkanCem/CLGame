@@ -19,20 +19,12 @@ struct Player_s{
 
 typedef struct Player_s Player;
 
+
 void givePlayerInfo(Player* p){
-	printf("Health : %.0lf Str : %.0lf Def : %.0lf HealthPotion : %d\n",p->health,p->strength,p->defence,p->hp);
+	printf("Health : %.0lf Str : %.0lf Def : %.0lf HealthPotion : %d/10\n",p->health,p->strength,p->defence,p->hp);
 }
 
-void displayInventory(Player* p){
-	printf("Inventory capacity : %d\n",p->invCapacity);
-	if(p->itemCtr == 0){
-		printf("You dont have any items!\n");
-	}
-	for(int i = 0;i<p->itemCtr;i++){
-		printf("%s ",p->items[i].name);
-		printf("Str : %d ,Def : %d ,InvCapacity : %d\n",p->items[i].strStat,p->items[i].defStat,p->items[i].invCapStat);
-	}
-}
+
 
 void updateStats(Player* p,Item itemToAdd){
 	p->strength += MIN(10000,itemToAdd.strStat);
@@ -98,6 +90,28 @@ void removeItem(Player* p,int index,int quantity){
 	deleteStats(p,itemToRemove);
 }
 
+void displayInventory(Player* p){
+	printf("Inventory capacity : %d\n",p->invCapacity);
+	if(p->itemCtr == 0){
+		printf("You dont have any items!\n");
+		return;
+	}
+	for(int i = 0;i<p->itemCtr;i++){
+		printf("%s ",p->items[i].name);
+		printf("Str : %d ,Def : %d ,InvCapacity : %d\n",p->items[i].strStat,p->items[i].defStat,p->items[i].invCapStat);
+	}
+	printf("Enter index of item to delete(1> to delete nothing)\n");
+	int c = 0;
+	scanf("%d",&c);
+	if(c < 1)
+		return;
+	while(c>p->itemCtr){
+		printf("Enter a valid choice!");
+		scanf("%d",&c);
+	}
+	removeItem(p,c,1);
+	printf("Item is deleted!");
+}
 double attack(Player* p){
 	return (p->strength)*((rand()%11)==3 ? 2 :1);
 }
