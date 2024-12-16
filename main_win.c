@@ -130,7 +130,11 @@ void deleteGame(){
 	Sleep(2000);
 	mainMenu();
 }
-
+void gameOver(){
+	printf("Game Over!\n");
+	Sleep(3000);
+	mainMenu();
+}
 void exitGame(){
 	printf("Goodbye!\n");
 	Sleep(3000); 
@@ -236,12 +240,16 @@ void gameLoop(){
 		int sumDmg = 0;
 		for(i;i<room.mobCtr;i++){
 			int receivedDmg = mobAttack(&room.mobs[i]);
+			if(0 != roomNumber % 5){
 				printf("Mob %d deals %d damage!\n",i+1,receivedDmg);
-				sumDmg += receivedDmg;
+			}
+			else
+				printf("Boss deals %d damage!\n",receivedDmg);
+			sumDmg += receivedDmg;
 		}
 		int remainingHealth = getDamage(&p1,sumDmg);
 		if(remainingHealth <= 0){
-			exitGame();
+			gameOver();
 		}
 		Sleep(3000);
 	}
