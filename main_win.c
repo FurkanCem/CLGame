@@ -41,10 +41,17 @@ void saveGame(){
 	FILE *fp;
 	checkSaveFiles();	
 	int selection;
-	scanf("%d",&selection);
+	while(scanf("%d",&selection) != 1){
+		printf("Enter numeric input\n");
+		while(getchar() != '\n');
+	}
+	
 	while(selection>3 || selection<1){
 		printf("Enter a valid save location!\n");
-		scanf("%d",&selection);
+		if(scanf("%d",&selection) != 1){
+			printf("Enter numeric input\n");
+			while(getchar() != '\n');
+		}
 	}
 	fp = fopen(files[selection-1],"w");
 
@@ -73,11 +80,16 @@ void loadGame(){
 	
 	FILE *fp;
 	int selection;
-	scanf("%d",&selection);
-	
+	while(scanf("%d",&selection) != 1){
+		printf("Enter numeric input\n");
+		while(getchar() != '\n');
+	}	
 	while(!(selection < 4 && selection > 0 && saves[selection-1] == 1)){
 		printf("Enter a valid save location!\n");
-		scanf("%d",&selection);
+		if(scanf("%d",&selection) != 1){
+			printf("Enter numeric input\n");
+			while(getchar() != '\n');
+		}	
 	}
 	fp = fopen(files[selection-1],"r");
 	srand(time(NULL));
@@ -108,15 +120,23 @@ void deleteGame(){
 	}	
 	
 	int selection;
-	scanf("%d",&selection);
-	
+	while(scanf("%d",&selection) != 1){
+		printf("Enter numeric input\n");
+		while(getchar() != '\n');
+	}	
 	while(!(selection < 4 && selection > 0 && saves[selection-1] == 1)){
 		printf("Enter a valid save location!\n");
-		scanf("%d",&selection);
+		if(scanf("%d",&selection) != 1){
+			printf("Enter numeric input\n");
+			while(getchar() != '\n');
+		}	
 	}
 	printf("Are you sure[y,N] : ");	
 	char surety = 'n';
-	scanf(" %c",&surety);
+	while(scanf(" %c",&surety) != 1){
+		printf("Enter a character!\n");
+		while(getchar() != '\n');
+	}
 	if(!(surety == 'Y' || surety == 'y')){
 		mainMenu();	
 		return;
@@ -151,7 +171,11 @@ void mainMenu(){
 	printf("[4] Exit\n");
 	int selection;
 	while(true){
-		scanf("%d",&selection);
+		if(scanf("%d",&selection) != 1){
+			printf("Enter numeric input!\n");
+			while(getchar()!= '\n');
+			continue;
+		}
 		switch(selection){
 			case 1:
 				startGame();	
@@ -192,10 +216,15 @@ void gameLoop(){
 			givePlayerInfo(&p1);
 			giveRoomInformation(room);
 			actionSelection();
-			scanf("%d",&actionSelected);
+			if(scanf("%d",&actionSelected) != 1){
+				printf("Enter numeric input!\n");
+				while(getchar() != '\n');
+				Sleep(2000);
+				continue;
+			}
 			if(actionSelected > 0 || actionSelected < 4)		
 				break;
-			printf("Enter a valid choice");	
+			printf("Enter a valid choice\n");	
 		}
 		
 		Mob* targetedMob = &room.mobs[mobTargetIndex];
@@ -232,6 +261,11 @@ void gameLoop(){
 				break;
 			case 5:
 				mainMenu();
+				break;
+			default:
+				printf("Enter a valid choice!\n");
+				Sleep(2000);
+				checkedInventory = true;
 				break;
 		}
 		if(checkedInventory)
